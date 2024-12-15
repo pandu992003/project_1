@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Transport Finder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #9d1010, #050558);
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 400px;
+        }
+        .logo {
+            width: 200px;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .btn {
+            padding: 12px 20px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="logo.png" alt="College Logo" class="logo">
+        <h2>Find Your College Bus Route</h2>
+        <input type="text" id="rollNumber" class="input-box" placeholder="Enter Registered Number">
+        <button class="btn" onclick="findRoute()">Find Route</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function findRoute() {
+            const rollNumber = document.getElementById('rollNumber').value;
+            if (!rollNumber) {
+                document.getElementById('result').innerHTML = "<p>Please enter your registered number!</p>";
+                return;
+            }
+
+            fetch(/find-route?rollNumber=${rollNumber})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('result').innerHTML = <p>${data.error}</p>;
+                    } else {
+                        document.getElementById('result').innerHTML = `
+                            <p><strong>Route Number:</strong> ${data.routeNumber}</p>
+                            <p><strong>Route Name:</strong> ${data.routeName}</p>
+                            <p><strong>Fee:</strong> ₹${data.fee}</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = "<p>Something went wrong. Please try again.</p>";
+                });
+        }
+    </script>
+</body>
+</html>
